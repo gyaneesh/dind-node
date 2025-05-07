@@ -30,7 +30,7 @@ jobs:
           file: ./Dockerfile
           push: true
           outputs: type=image
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
           # build-args: |
               # NONE=${{ env.NONE }}
           labels: |
