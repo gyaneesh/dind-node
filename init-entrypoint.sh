@@ -1,29 +1,15 @@
 #!/bin/sh
-set -eu
+set -e
 
-# Parse insecure registries from environment variable
-parse_insecure_registries() {
-    local registries="${DOCKER_INSECURE_REGISTRIES:-}"
-    local result=""
-    
-    if [ -n "$registries" ]; then
-        # Split by comma, space, or semicolon
-        for registry in $(echo "$registries" | tr ',;' ' '); do
-            result="$result --insecure-registry $registry"
-        done
-    fi
-    
-    echo "$result"
-}
-
-# Check if we're calling dockerd (directly or indirectly)
+# If this looks like a dockerd command (either directly or via the entrypoint default behavior)
 if [ "$#" -eq 0 ] || [ "${1#-}" != "$1" ] || [ "$1" = "dockerd" ]; then
-    # Export our extra options so they can be picked up by a subshell
-    export DOCKERD_EXTRA_OPTS="$(parse_insecure_registries) ${DOCKER_EXTRA_OPTS:-}"
+    # Pass control to original entrypoint, which will set up the dockerd command,
+    # but use our extend-dockerd.sh as a wrapper around the final command
+    UPSTREAM_DOCKER_ENTRYPOINT=/usr/local/bin/dockerd-entrypoint.sh
     
-    # Modify PATH to include our scripts directory
-    export PATH="/usr/local/bin/custom-scripts:$PATH"
+    # Execute the original entrypoint but with our wrapper in front of dockerd
+    exec "$UPSTREAM_DOCKER_ENTRYPOINT" /usr/local/bin/extend-dockerd.sh "$@"
+else
+    # For non-dockerd commands, just pass through to the original entrypoint
+    exec /usr/local/bin/dockerd-entrypoint.sh "$@"
 fi
-
-# Call the original entrypoint script
-exec /usr/local/bin/dockerd-entrypoint.sh "$@"
