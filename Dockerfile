@@ -6,7 +6,7 @@ FROM docker:28.1.1-dind-alpine3.21
 #FROM docker:dind-alpine3.21
 
 # Install Node.js and npm
-RUN apk add --no-cache curl bash zstd 
+RUN apk add --no-cache curl bash zstd tar
 
 # Set the Node.js version
 ENV NODE_VERSION=20.19.1
