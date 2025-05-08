@@ -4,7 +4,8 @@
 # Use the official Docker-in-Docker Alpine image as base
 # FROM docker:28.1.1-dind-alpine3.21
 # switch to cli
-FROM 28.1.1-cli-alpine3.21
+# FROM 28.1.1-cli-alpine3.21
+FROM code.forgejo.org/oci/docker:cli
 
 ARG NODE_VERSION
 
