@@ -6,7 +6,8 @@ FROM docker:28.1.1-dind-alpine3.21
 #FROM docker:dind-alpine3.21
 
 # Install necessities
-RUN apk add --no-cache curl bash zstd tar python3 make g++ git bash nodejs npm
+RUN apk add --no-cache curl bash zstd tar python3 make g++ git bash
+## nodejs npm
 
 # Download Specific Node Version
 #ENV NODE_VERSION=20.19.1
