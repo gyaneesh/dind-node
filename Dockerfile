@@ -5,16 +5,18 @@
 FROM docker:28.1.1-dind-alpine3.21
 #FROM docker:dind-alpine3.21
 
+ARG NODE_VERSION
+
 # Install necessities
 RUN apk add --no-cache curl bash zstd tar python3 make g++ git bash
 ## nodejs npm
 
 # Download Specific Node Version
-#ENV NODE_VERSION=20.19.1
-# RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o node.tar.xz && \
-#    tar -xJf node.tar.xz --strip-components=1 -C /usr/local && \
-#    rm node.tar.xz
-# ENV PATH="/usr/local/bin:$PATH"
+ENV NODE_VERSION=20.19.1
+RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o node.tar.xz && \
+    tar -xJf node.tar.xz --strip-components=1 -C /usr/local && \
+    rm node.tar.xz
+ENV PATH="/usr/local/bin:$PATH"
 
 # Create directory for custom scripts
 RUN mkdir -p /usr/local/bin/custom-scripts
