@@ -5,16 +5,23 @@
 FROM docker:28.1.1-dind-alpine3.21
 #FROM docker:dind-alpine3.21
 
-# Install Node.js and npm
-RUN apk add --no-cache curl bash zstd tar
+# Install necessities
+RUN apk add --no-cache curl bash zstd tar python3 make g++ git bash nodejs npm
 
-# Set the Node.js version
-ENV NODE_VERSION=20.19.1
+# Download Specific Node Version
+#ENV NODE_VERSION=20.19.1
+# RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o node.tar.xz && \
+#    tar -xJf node.tar.xz --strip-components=1 -C /usr/local && \
+#    rm node.tar.xz
+# ENV PATH="/usr/local/bin:$PATH"
 
-# Download and install Node.js
-RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o node.tar.xz && \
-    tar -xJf node.tar.xz --strip-components=1 -C /usr/local && \
-    rm node.tar.xz
+# Create directory for custom scripts
+RUN mkdir -p /usr/local/bin/custom-scripts
 
-# Set the PATH environment variable
-ENV PATH="/usr/local/bin:$PATH"
+# Create dockerd wrapper
+RUN echo -e '#!/bin/sh\nexec /usr/local/bin/dockerd "$@" ${DOCKERD_EXTRA_OPTS:-}' > /usr/local/bin/custom-scripts/dockerd \
+    && chmod +x /usr/local/bin/custom-scripts/dockerd
+
+# Create a init wrapper
+COPY init-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/init-entrypoint.sh
