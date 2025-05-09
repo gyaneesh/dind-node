@@ -8,15 +8,16 @@
 FROM code.forgejo.org/oci/docker:cli
 
 # Install necessities
-RUN apk add --no-cache bash curl g++ git make python3 tar wget xz zstd
-## nodejs npm
+RUN apk add --no-cache bash curl g++ git \
+    nodejs npm \
+    make python3 tar wget xz zstd 
 
 # Download Specific Node Version
-ENV NODE_VERSION=20.19.1
+#ENV NODE_VERSION=20.19.1
 
-RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o /tmp/node.tar.xz && \
-    tar -xJf /tmp/node.tar.xz --strip-components=1 -C /usr/local && \
-    rm /tmp/node.tar.xz
+#RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz -o /tmp/node.tar.xz && \
+#    tar -xJf /tmp/node.tar.xz --strip-components=1 -C /usr/local && \
+#    rm /tmp/node.tar.xz
 
 #ENV PATH="/usr/local/bin:$PATH"
 
